@@ -22,90 +22,6 @@ export class IndividualRequestComponent implements OnInit {
   financialSecondFormGroup: FormGroup;
 
   startedEditing: boolean = false;
-
-  constructor(private _formBuilder: FormBuilder,
-              private router: Router){}
-
-  ngOnInit(){
-
-    this.parsedJson = JSON.parse(JSON.stringify(this.json));
-
-    for(let section of this.parsedJson.sections){
-      section.form = new FormGroup({});
-      for (let question of section.question_list) {
-        if (question.qtype == 'multi-choice') {
-          for (let choice of question.qchoices) {
-            const control: FormControl = new FormControl(choice.selected, Validators.required);
-            section.form.addControl(choice.key, control);
-          }
-        }
-        else if(question.qtype == 'single-choice') {
-          const control: FormControl = new FormControl(question.answer, Validators.required);
-          section.form.addControl(question.key, control);
-        }
-        else if(question.qtype == 'table') {
-          for(let row of question.row){
-            for(let columnQuestion of row.columns){
-              if(columnQuestion.qtype == 'single-choice'){
-                const control: FormControl = new FormControl(columnQuestion.answer, Validators.required);
-                section.form.addControl(columnQuestion.key, control);
-              }
-            }
-          }
-
-        }
-      }
-    }
-    this.financialFirstFormGroup = this._formBuilder.group({
-      hosCtrl: false,
-      hogCtrl: [''],
-      spCtrl: [''],
-      jCtrl: [''],
-      mCtrl: [''],
-      opCtrl: [''],
-    });
-    this.financialSecondFormGroup = this._formBuilder.group({
-      hosCtrl: false,
-      hogCtrl: [''],
-      spCtrl: [''],
-      jCtrl: [''],
-      mCtrl: [''],
-      opCtrl: [''],
-    });
-
-    this.firstFormGroup = this._formBuilder.group({
-      titleCtrl: ['', Validators.required],
-      firstNameCtrl: ['', Validators.required],
-      lastNameCtrl: ['', Validators.required],
-      documentIdCtrl: ['', Validators.required],
-      dateCtrl: ['', Validators.required]
-    });
-    this.secondFormGroup = this._formBuilder.group({
-      phoneCtrl: ['', Validators.required],
-      emailCtrl: ['', Validators.email],
-      mobileCtrl: ['', Validators.required],
-      faxCtrl: ['', Validators.required]
-    });
-    this.thirdFormGroup = this._formBuilder.group({
-      streetCtrl: ['', Validators.required],
-      numberCtrl: ['', Validators.required],
-      cityCtrl: ['', Validators.required],
-      postalCtrl: ['', Validators.required],
-      additionalInfoCtrl: [''],
-      stateCtrl: ['', Validators.required],
-      countryCtrl: ['', Validators.required]
-  });
-    this.taxFormGroup = this._formBuilder.group({
-      countryCtrl: ['', Validators.required],
-      taxIdCtrl: ['', Validators.required],
-  });
-  }
-
-  saveSuitability(){
-    console.log(this.parsedJson);
-    console.log(this.parsedJson.sections[0].form.valid);
-  }
-
   json: any = {
     "name": "Individual Customer",
     "sections": [
@@ -528,11 +444,93 @@ export class IndividualRequestComponent implements OnInit {
             "qpoints": 0,
             "answer": "",
             "key": "a5"
-
-
           },
         ]
       },
     ]
   };
+
+  constructor(private _formBuilder: FormBuilder,
+              private router: Router){}
+
+  ngOnInit(){
+
+    this.parsedJson = JSON.parse(JSON.stringify(this.json));
+
+    for(let section of this.parsedJson.sections){
+      section.form = new FormGroup({});
+      for (let question of section.question_list) {
+        if (question.qtype == 'multi-choice') {
+          for (let choice of question.qchoices) {
+            const control: FormControl = new FormControl(choice.selected, Validators.required);
+            section.form.addControl(choice.key, control);
+          }
+        }
+        else if(question.qtype == 'single-choice') {
+          const control: FormControl = new FormControl(question.answer, Validators.required);
+          section.form.addControl(question.key, control);
+        }
+        else if(question.qtype == 'table') {
+          for(let row of question.row){
+            for(let columnQuestion of row.columns){
+              if(columnQuestion.qtype == 'single-choice'){
+                const control: FormControl = new FormControl(columnQuestion.answer, Validators.required);
+                section.form.addControl(columnQuestion.key, control);
+              }
+            }
+          }
+
+        }
+      }
+    }
+    this.financialFirstFormGroup = this._formBuilder.group({
+      hosCtrl: false,
+      hogCtrl: [''],
+      spCtrl: [''],
+      jCtrl: [''],
+      mCtrl: [''],
+      opCtrl: [''],
+    });
+    this.financialSecondFormGroup = this._formBuilder.group({
+      hosCtrl: false,
+      hogCtrl: [''],
+      spCtrl: [''],
+      jCtrl: [''],
+      mCtrl: [''],
+      opCtrl: [''],
+    });
+
+    this.firstFormGroup = this._formBuilder.group({
+      titleCtrl: ['', Validators.required],
+      firstNameCtrl: ['', Validators.required],
+      lastNameCtrl: ['', Validators.required],
+      documentIdCtrl: ['', Validators.required],
+      dateCtrl: ['', Validators.required]
+    });
+    this.secondFormGroup = this._formBuilder.group({
+      phoneCtrl: ['', Validators.required],
+      emailCtrl: ['', Validators.email],
+      mobileCtrl: ['', Validators.required],
+      faxCtrl: ['', Validators.required]
+    });
+    this.thirdFormGroup = this._formBuilder.group({
+      streetCtrl: ['', Validators.required],
+      numberCtrl: ['', Validators.required],
+      cityCtrl: ['', Validators.required],
+      postalCtrl: ['', Validators.required],
+      additionalInfoCtrl: [''],
+      stateCtrl: ['', Validators.required],
+      countryCtrl: ['', Validators.required]
+    });
+    this.taxFormGroup = this._formBuilder.group({
+      countryCtrl: ['', Validators.required],
+      taxIdCtrl: ['', Validators.required],
+    });
+  }
+
+  saveSuitability(){
+    console.log(this.parsedJson);
+    console.log(this.parsedJson.sections[0].form.valid);
+    console.log(this.parsedJson.sections[0].form.value);
+  }
 }

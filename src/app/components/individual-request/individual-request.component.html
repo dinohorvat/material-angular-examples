@@ -111,7 +111,7 @@
             </span>
           </div>
         </form>
-        <button  mat-button class="danger mat-raised-button" [color]="'primary'" (click)="saveSuitability()">Save</button>
+        <button [disabled]="!parsedJson.sections[0].form.valid"  mat-button class="danger mat-raised-button" [color]="'primary'" (click)="saveSuitability()">Save</button>
       </mat-step>
 
     </mat-horizontal-stepper>
