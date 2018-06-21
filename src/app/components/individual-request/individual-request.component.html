@@ -1,0 +1,152 @@
+
+<mat-accordion>
+  <!--
+ *****************************************************************
+ ************************                *************************
+ ************************  DYNAMIC FORMS *************************
+ ************************                *************************
+ ************************                *************************
+ ************************                *************************
+  -->
+  <mat-expansion-panel hideToggle="true">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Suitability Information
+      </mat-panel-title>
+      <mat-icon>assignment_late</mat-icon>
+    </mat-expansion-panel-header>
+    <mat-horizontal-stepper>
+      <mat-step [stepControl]="step.form" *ngFor="let step of parsedJson.sections">
+        <form [formGroup]="step.form">
+          <ng-template matStepLabel>{{step.section_name}}</ng-template>
+          <div class="suitability-container">
+            <!--<table>-->
+              <!--<thead>-->
+              <!--<th></th>-->
+              <!--<th>Sufficient knowledge to understand the risks involved</th>-->
+              <!--<th>Transactions already made in past</th>-->
+              <!--</thead>-->
+              <!--<tbody>-->
+              <!--<tr>-->
+                <!--<td style="width:20%">Equities</td>-->
+                <!--<td style="width:20%; text-align:center;"><mat-button-toggle-group #group="matButtonToggleGroup">-->
+                  <!--<mat-button-toggle value="test">-->
+                    <!--Yes-->
+                  <!--</mat-button-toggle>-->
+                  <!--<mat-button-toggle value="test">-->
+                    <!--No-->
+                  <!--</mat-button-toggle>-->
+                <!--</mat-button-toggle-group></td>-->
+                <!--<td style="width:20%; text-align:center;"><mat-button-toggle-group #group="matButtonToggleGroup">-->
+                  <!--<mat-button-toggle value="test">-->
+                    <!--Yes-->
+                  <!--</mat-button-toggle>-->
+                  <!--<mat-button-toggle value="test">-->
+                    <!--No-->
+                  <!--</mat-button-toggle>-->
+                <!--</mat-button-toggle-group></td>-->
+              <!--</tr>-->
+              <!--<tr>-->
+                <!--<td style="width:20%">Listed and unlisted derivatives-->
+                  <!--(including currency-->
+                  <!--derivatives, along with warrants)</td>-->
+                <!--<td style="width:10%; text-align:center;"><mat-button-toggle-group #group="matButtonToggleGroup">-->
+                  <!--<mat-button-toggle value="test">-->
+                    <!--Yes-->
+                  <!--</mat-button-toggle>-->
+                  <!--<mat-button-toggle value="test">-->
+                    <!--No-->
+                  <!--</mat-button-toggle>-->
+                <!--</mat-button-toggle-group></td>-->
+                <!--<td style="width:10%; text-align:center;"><mat-button-toggle-group #group="matButtonToggleGroup">-->
+                  <!--<mat-button-toggle value="test">-->
+                    <!--Yes-->
+                  <!--</mat-button-toggle>-->
+                  <!--<mat-button-toggle value="test">-->
+                    <!--No-->
+                  <!--</mat-button-toggle>-->
+                <!--</mat-button-toggle-group></td>-->
+              <!--</tr>-->
+              <!--</tbody>-->
+            <!--</table>-->
+
+            <span style="margin-bottom: 40px;" *ngFor="let question of step.question_list">
+              <div *ngIf="question.qtype == 'table'">
+              <table>
+              <thead>
+              <th *ngFor="let header of question.headers">{{header.name}}</th>
+              </thead>
+              <tbody>
+              <tr *ngFor="let row of question.row">
+                <td class="suitability-td" style="width:20%" *ngFor="let col of row.columns">
+                  <span *ngIf="col.qtype =='label'">{{col.name}}</span>
+                    <mat-button-toggle-group [(ngModel)]="col.answer"  [formControlName]="col.key" *ngIf="col.qtype == 'single-choice'" #group="matButtonToggleGroup">
+                      <mat-button-toggle *ngFor="let choice of col.qchoices" [value]="choice.value">
+                        {{choice.text}}
+                      </mat-button-toggle>
+                    </mat-button-toggle-group>
+                </td>
+              </tr>
+              </tbody>
+              </table>
+              </div>
+              <div class="question-text"><label>{{question.qtext}}</label></div>
+              <div class="question-answer"><mat-button-toggle-group [(ngModel)]="question.answer"  [formControlName]="question.key" *ngIf="question.qtype == 'single-choice'" #group="matButtonToggleGroup">
+                <mat-button-toggle *ngFor="let choice of question.qchoices" [value]="choice.value">
+                    {{choice.text}}
+                </mat-button-toggle>
+              </mat-button-toggle-group>
+                </div>
+                <!--<mat-radio-group (change)="isVisible(step, question)" [(ngModel)]="question.answer"  [formControlName]="question.key" *ngIf="question.qtype == 'single-choice'">-->
+                  <!--<mat-radio-button style="width: 100%;"-->
+                                    <!--*ngFor="let choice of question.qchoices" [color]="'primary'" [value]="choice.value">-->
+                    <!--{{choice.text}}-->
+                  <!--</mat-radio-button>-->
+                <!--</mat-radio-group>-->
+                <span *ngIf="question.qtype == 'multi-choice'">
+                  <div *ngFor="let choice of question.qchoices">
+                    <mat-checkbox [value]="choice.value" [color]="'primary'"
+                                  [formControlName]="choice.key">{{choice.text}}</mat-checkbox></div>
+                </span>
+            </span>
+          </div>
+        </form>
+        <button  mat-button class="danger mat-raised-button" [color]="'primary'" (click)="saveSuitability()">Save</button>
+      </mat-step>
+
+    </mat-horizontal-stepper>
+  </mat-expansion-panel>
+  <!--
+*****************************************************************
+************************                *************************
+************************  DYNAMIC FORMS *************************
+************************       /END     *************************
+************************                *************************
+************************                *************************
+-->
+
+
+
+<!-- DYNAMIC FORMS BACKUP -- >
+<!--<mat-expansion-panel hideToggle="true">-->
+  <!--<mat-expansion-panel-header>-->
+    <!--<mat-panel-title>-->
+      <!--Suitability Information-->
+    <!--</mat-panel-title>-->
+    <!--<mat-icon>account_balance</mat-icon>-->
+  <!--</mat-expansion-panel-header>-->
+  <!--<mat-horizontal-stepper>-->
+    <!--<mat-step [stepControl]="step.form" *ngFor="let step of parsedJson.sections">-->
+      <!--<form [formGroup]="step.form">-->
+        <!--<ng-template matStepLabel>{{step.section_name}}</ng-template>-->
+        <!--<div class="form-container">-->
+          <!--<mat-form-field>-->
+            <!--<input matInput placeholder="Title (Mr, Ms)" formControlName="titleCtrl" required>-->
+          <!--</mat-form-field>-->
+        <!--</div>-->
+      <!--</form>-->
+      <!--<button mat-button matStepperNext>Next</button>-->
+    <!--</mat-step>-->
+  <!--</mat-horizontal-stepper>-->
+  <!--<button (click)="save()">Save Form</button>-->
+<!--</mat-expansion-panel>-->

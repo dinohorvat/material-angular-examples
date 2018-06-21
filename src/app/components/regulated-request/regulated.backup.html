@@ -1,0 +1,500 @@
+<mat-accordion>
+  <mat-expansion-panel hideToggle="true" [expanded]="false">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Customer Identification
+      </mat-panel-title>
+      <mat-panel-description>
+      </mat-panel-description>
+      <mat-icon>account_circle</mat-icon>
+    </mat-expansion-panel-header>
+    <!-- TODO: Fix linear TRUE -->
+    <mat-horizontal-stepper #stepper>
+      <mat-step [stepControl]="firstFormGroup">
+        <form [formGroup]="firstFormGroup">
+          <ng-template matStepLabel>Identity Details</ng-template>
+          <div class="form-container">
+            <label>Regulatory Authority: </label>
+            <mat-radio-group  formControlName="authCtrl">
+              <mat-radio-button [color]="'primary'" value="fca">FCA</mat-radio-button>
+              <mat-radio-button [color]="'primary'" value="sec">SEC</mat-radio-button>
+              <mat-radio-button style="margin-bottom:10px;" [color]="'primary'" value="amf">AMF</mat-radio-button>
+            </mat-radio-group>
+            <mat-form-field>
+              <input #regID (blur)="fetchSEC(regID.value)" matInput placeholder="Registration ID" formControlName="regIdCtrl" required>
+            </mat-form-field>
+            <mat-form-field>
+              <input matInput placeholder="Client Name" formControlName="clientNameCtrl" required>
+            </mat-form-field>
+            <mat-form-field>
+              <input matInput placeholder="Client Place of Business" formControlName="businessPlaceCtrl" required>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-select placeholder="Client Origin" formControlName="countryCtrl" required>
+                <mat-option>--</mat-option>
+                <mat-option *ngFor="let country of countries" [value]="country.code">
+                  {{country.name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <label>Political Exposed Person:</label>
+            <mat-checkbox [value]="HosTate" [color]="'primary'" formControlName="hosCtrl">Head of State</mat-checkbox>
+            <mat-checkbox [color]="'primary'" formControlName="hogCtrl">Head of Gov.</mat-checkbox>
+            <mat-checkbox [color]="'primary'" formControlName="spCtrl">Senior Politician</mat-checkbox>
+            <mat-checkbox [color]="'primary'" formControlName="jCtrl">Judical Official</mat-checkbox>
+            <mat-checkbox [color]="'primary'" formControlName="mCtrl">Military Official</mat-checkbox>
+            <mat-checkbox [color]="'primary'" formControlName="opCtrl">Other Political / Public Function</mat-checkbox>
+          </div>
+          <div>
+            <button mat-button matStepperNext>Next</button>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step [stepControl]="secondFormGroup">
+        <form [formGroup]="secondFormGroup">
+          <ng-template matStepLabel>Contact Details</ng-template>
+          <div class="form-container">
+            <mat-form-field>
+              <input matInput placeholder="Phone" formControlName="phoneCtrl" required>
+            </mat-form-field>
+            <mat-form-field>
+              <input matInput placeholder="Mobile" formControlName="mobileCtrl" required>
+            </mat-form-field>
+            <mat-form-field>
+              <input matInput placeholder="Email" formControlName="emailCtrl" required>
+            </mat-form-field>
+            <mat-form-field>
+              <input matInput placeholder="Fax" formControlName="faxCtrl" required>
+            </mat-form-field>
+          </div>
+
+          <div>
+            <button mat-button matStepperPrevious>Back</button>
+            <button mat-button matStepperNext>Next</button>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step [stepControl]="thirdFormGroup">
+        <form [formGroup]="thirdFormGroup">
+          <ng-template matStepLabel>Address Details</ng-template>
+          <div class="form-container">
+            <mat-form-field>
+              <input matInput placeholder="Street" formControlName="streetCtrl" required>
+            </mat-form-field>
+            <mat-form-field>
+              <input matInput placeholder="Number" formControlName="numberCtrl" required>
+            </mat-form-field>
+            <mat-form-field>
+              <input matInput placeholder="Additional Information" formControlName="additionalInfoCtrl">
+            </mat-form-field>
+            <mat-form-field>
+              <input matInput placeholder="City" formControlName="cityCtrl" required>
+            </mat-form-field>
+            <mat-form-field>
+              <input matInput placeholder="Postal Code" formControlName="postalCtrl" required>
+            </mat-form-field>
+            <mat-form-field>
+              <input matInput placeholder="State" formControlName="stateCtrl" required>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-select placeholder="Country" formControlName="countryCtrl" required>
+                <mat-option>--</mat-option>
+                <mat-option *ngFor="let country of countries" [value]="country.code">
+                  {{country.name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div>
+            <button mat-button matStepperPrevious>Back</button>
+            <button mat-button matStepperNext>Next</button>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step [stepControl]="secondFormGroup">
+        <ng-template matStepLabel>Documents</ng-template>
+        <h6>Please Upload</h6>
+
+        <div ng2FileDrop
+             [ngClass]="{'nv-file-over': hasBaseDropZoneOver}"
+             (fileOver)="fileOverBase($event)"
+             [uploader]="uploaderFirst"
+             class="well my-drop-zone fileupload-drop-zone">
+          Bye Laws
+        </div>
+
+        <div ng2FileDrop
+             [ngClass]="{'another-file-over-class': hasAnotherDropZoneOver}"
+             (fileOver)="fileOverAnother($event)"
+             [uploader]="uploaderFirst"
+             class="well my-drop-zone fileupload-drop-zone">
+          Act of Incorporation
+        </div>
+        <div class="mb-1">
+          <div ng2FileDrop
+               [ngClass]="{'dz-file-over': hasBaseDropZoneOver}"
+               (fileOver)="fileOverBase($event)"
+               [uploader]="uploaderFirst"
+               class="fileupload-drop-zone">
+            Drop files here to upload
+          </div>
+        </div>
+        <table class="default-table mat-box-shadow" style="width: 100%">
+          <thead>
+          <tr>
+            <th width="30%">Name</th>
+            <th>Size</th>
+            <th>Progress</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+          </thead>
+          <tbody *ngIf="uploaderFirst.queue.length; else tableNoData1">
+          <tr *ngFor="let item of uploaderFirst.queue">
+            <td>{{ item?.file?.name }}</td>
+            <td nowrap>{{ item?.file?.size/1024/1024 | number:'.2' }} MB</td>
+            <td>
+              <div class="progress" style="margin-bottom: 0;">
+                <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': item.progress + '%' }"></div>
+                <mat-progress-bar
+                  class=""
+                  color="primary"
+                  mode="determinate"
+                  [value]="item.progress">
+                </mat-progress-bar>
+              </div>
+            </td>
+            <td class="">
+              <mat-icon *ngIf="item.isSuccess">check</mat-icon>
+              <mat-icon *ngIf="item.isCancel">cancel</mat-icon>
+              <mat-icon *ngIf="item.isError">error</mat-icon>
+            </td>
+            <td nowrap>
+              <button
+                mat-raised-button
+                class="mat-warn"
+                (click)="item.remove()">Remove</button>
+            </td>
+          </tr>
+          </tbody>
+          <ng-template #tableNoData1>
+            <p [ngStyle]="{padding: '0 1.2rem'}">Act of Incorporation,<br> Articles of association,<br>Bye Laws</p>
+          </ng-template>
+        </table>
+        <div>
+          <p>Queue progress:</p>
+          <div class="progress mb-1" >
+            <mat-progress-bar
+              class=""
+              color="primary"
+              mode="determinate"
+              [value]="uploaderFirst.progress">
+            </mat-progress-bar>
+          </div>
+
+          <button
+            mat-raised-button
+            class="mat-primary"
+            (click)="uploaderFirst.uploadAll()"
+            [disabled]="!uploaderFirst.getNotUploadedItems().length">Upload all</button>
+        </div>
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+      </mat-step>
+      <mat-step>
+        <ng-template matStepLabel>Done</ng-template>
+        <button mat-button class="danger mat-raised-button" [color]="'primary'" (click)="saveCustomer()">Submit</button>
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button (click)="stepper.reset()">Reset</button>
+        </div>
+      </mat-step>
+    </mat-horizontal-stepper>
+  </mat-expansion-panel>
+  <mat-expansion-panel hideToggle="true">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Corporate Structure
+      </mat-panel-title>
+      <mat-icon>business</mat-icon>
+    </mat-expansion-panel-header>
+    <mat-horizontal-stepper #stepper>
+      <mat-step [stepControl]="corporateFirstFormGroup">
+        <form [formGroup]="corporateFirstFormGroup">
+          <ng-template matStepLabel>Shareholders</ng-template>
+          <div class="form-container">
+            <mat-form-field>
+              <input matInput placeholder="Shareholder" formControlName="shareHolderCtrl" required>
+            </mat-form-field>
+            <button mat-button class="danger mat-raised-button" [color]="'primary'" (click)="addShareHolder()">Add More</button>
+          </div>
+        </form>
+        <button mat-button matStepperNext>Next</button>
+      </mat-step>
+      <mat-step>
+        <ng-template matStepLabel>Board Members</ng-template>
+        <div class="mb-1">
+          <div ng2FileDrop
+               [ngClass]="{'dz-file-over': hasBaseDropZoneOver}"
+               (fileOver)="fileOverBase($event)"
+               [uploader]="uploader"
+               class="fileupload-drop-zone">
+            Drop files here to upload
+          </div>
+        </div>
+        <table class="default-table mat-box-shadow" style="width: 100%">
+          <thead>
+          <tr>
+            <th width="30%">Name</th>
+            <th>Size</th>
+            <th>Progress</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+          </thead>
+          <tbody *ngIf="uploader.queue.length; else tableNoData2">
+          <tr *ngFor="let item of uploader.queue">
+            <td>{{ item?.file?.name }}</td>
+            <td nowrap>{{ item?.file?.size/1024/1024 | number:'.2' }} MB</td>
+            <td>
+              <div class="progress" style="margin-bottom: 0;">
+                <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': item.progress + '%' }"></div>
+                <mat-progress-bar
+                  class=""
+                  color="primary"
+                  mode="determinate"
+                  [value]="item.progress">
+                </mat-progress-bar>
+              </div>
+            </td>
+            <td class="">
+              <mat-icon *ngIf="item.isSuccess">check</mat-icon>
+              <mat-icon *ngIf="item.isCancel">cancel</mat-icon>
+              <mat-icon *ngIf="item.isError">error</mat-icon>
+            </td>
+            <td nowrap>
+              <button
+                mat-raised-button
+                class="mat-warn"
+                (click)="scanOCR(item.file)">Scan</button>
+            </td>
+            <td nowrap>
+              <button
+                mat-raised-button
+                class="mat-warn"
+                (click)="item.remove()">Remove</button>
+            </td>
+          </tr>
+          </tbody>
+          <ng-template #tableNoData2>
+            <p [ngStyle]="{padding: '0 1.2rem'}">ID or Passport Scan</p>
+          </ng-template>
+        </table>
+        <div>
+          <p>Queue progress:</p>
+          <div class="progress mb-1" >
+            <mat-progress-bar
+              class=""
+              color="primary"
+              mode="determinate"
+              [value]="uploader.progress">
+            </mat-progress-bar>
+          </div>
+
+          <button
+            mat-raised-button
+            class="mat-primary"
+            (click)="uploader.uploadAll()"
+            [disabled]="!uploader.getNotUploadedItems().length">Upload all</button>
+        </div>
+        <form [formGroup]="corporateSecondFormGroup">
+          <div class="form-container">
+            <mat-form-field>
+              <input matInput placeholder="Board Member" formControlName="boardMemberCtrl" required>
+            </mat-form-field>
+            <mat-form-field>
+              <input matInput placeholder="Document Number" formControlName="boardDocId" required>
+            </mat-form-field>
+            <button mat-button class="danger mat-raised-button" [color]="'primary'" (click)="addShareHolder()">Add More</button>
+          </div>
+        </form>
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+      </mat-step>
+      <mat-step>
+        <ng-template matStepLabel>Done</ng-template>
+        <button mat-button class="danger mat-raised-button" [color]="'primary'" (click)="saveNotif()">Submit</button>
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button (click)="stepper.reset()">Reset</button>
+        </div>
+      </mat-step>
+    </mat-horizontal-stepper>
+  </mat-expansion-panel>
+  <mat-expansion-panel hideToggle="true">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Financial Information
+      </mat-panel-title>
+      <mat-icon>account_balance</mat-icon>
+    </mat-expansion-panel-header>
+    <mat-horizontal-stepper #stepper>
+      <mat-step [stepControl]="financialFirstFormGroup">
+        <form [formGroup]="financialFirstFormGroup">
+          <ng-template matStepLabel>Economic Sector</ng-template>
+          <div class="form-container">
+            <mat-checkbox [color]="'primary'" formControlName="hosCtrl">Casino and Gaming</mat-checkbox>
+            <mat-checkbox [color]="'primary'" formControlName="hogCtrl">Trading in diamonds / precious stones</mat-checkbox>
+            <mat-checkbox [color]="'primary'" formControlName="spCtrl">Trading in works of art</mat-checkbox>
+            <mat-checkbox [color]="'primary'" formControlName="jCtrl">Carity</mat-checkbox>
+            <mat-checkbox [color]="'primary'" formControlName="mCtrl">Banks of financial institutions goverened by
+              religious rules</mat-checkbox>
+            <mat-checkbox [color]="'primary'" formControlName="opCtrl">Other</mat-checkbox>
+          </div>
+          <div>
+            <button mat-button matStepperNext>Next</button>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step [stepControl]="financialSecondFormGroup">
+        <form [formGroup]="financialSecondFormGroup">
+          <ng-template matStepLabel>Assets Under Management </ng-template>
+          <div class="form-container">
+            <mat-checkbox [color]="'primary'" formControlName="hosCtrl">Currency Trading</mat-checkbox>
+            <mat-checkbox [color]="'primary'" formControlName="hogCtrl">Directional Trading in</mat-checkbox>
+            <mat-checkbox [color]="'primary'" formControlName="spCtrl">Long Short Equity</mat-checkbox>
+            <mat-checkbox [color]="'primary'" formControlName="jCtrl">Carity</mat-checkbox>
+            <mat-checkbox [color]="'primary'" formControlName="mCtrl">Diversified Arbitrage</mat-checkbox>
+            <mat-checkbox [color]="'primary'" formControlName="mCtrl">Fixed Income Arbitrage</mat-checkbox>
+            <mat-checkbox [color]="'primary'" formControlName="mCtrl">Fixed Income</mat-checkbox>
+            <mat-checkbox [color]="'primary'" formControlName="mCtrl">Derivatives</mat-checkbox>
+            <mat-checkbox [color]="'primary'" formControlName="mCtrl">Financial Futures</mat-checkbox>
+            <mat-checkbox [color]="'primary'" formControlName="opCtrl">Other</mat-checkbox>
+          </div>
+          <div>
+            <button mat-button matStepperNext>Next</button>
+          </div>
+        </form>
+      </mat-step>
+
+      <mat-step>
+        <ng-template matStepLabel>Done</ng-template>
+        <button mat-button class="danger mat-raised-button" [color]="'primary'" (click)="saveFinancial()">Submit</button>
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button (click)="stepper.reset()">Reset</button>
+        </div>
+      </mat-step>
+    </mat-horizontal-stepper>
+  </mat-expansion-panel>
+  <mat-expansion-panel hideToggle="true">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Suitability Information
+      </mat-panel-title>
+      <mat-icon>assignment_late</mat-icon>
+    </mat-expansion-panel-header>
+    <mat-horizontal-stepper>
+      <mat-step [stepControl]="step.form" *ngFor="let step of parsedJson.sections">
+        <form [formGroup]="step.form">
+          <ng-template matStepLabel>{{step.section_name}}</ng-template>
+          <div class="form-container">
+            <mat-form-field *ngFor="let question of step.question_list">
+              <label>{{question.qtext}}</label>
+              <mat-radio-group formControlName="titleCtrl"  *ngIf="question.qtype == 'single-choice'">
+                <mat-radio-button *ngFor="let choice of question.qchoices" [color]="'primary'" [value]="choice.value">{{choice.text}}</mat-radio-button>
+              </mat-radio-group>
+              <span *ngIf="question.qtype == 'multi-choice'">
+               <div *ngFor="let choice of question.qchoices"> <mat-checkbox  [value]="choice.value" [color]="'primary'" formControlName="titleCtrl">{{choice.text}}</mat-checkbox></div>
+              </span>
+              <input style="display:none;"  matInput placeholder="{{question.qtext}}" formControlName="titleCtrl" required>
+            </mat-form-field>
+          </div>
+        </form>
+        <button mat-button class="danger mat-raised-button" [color]="'primary'" (click)="saveNotif()">Submit</button>
+      </mat-step>
+
+    </mat-horizontal-stepper>
+  </mat-expansion-panel>
+  <mat-expansion-panel hideToggle="true">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Authorized Signature
+      </mat-panel-title>
+      <mat-icon>assignment</mat-icon>
+    </mat-expansion-panel-header>
+    <div class="mb-1">
+      <div ng2FileDrop
+           [ngClass]="{'dz-file-over': hasBaseDropZoneOver}"
+           (fileOver)="fileOverBase($event)"
+           [uploader]="uploader"
+           class="fileupload-drop-zone">
+        Drop files here to upload
+      </div>
+    </div>
+    <table class="default-table mat-box-shadow" style="width: 100%">
+      <thead>
+      <tr>
+        <th width="30%">Name</th>
+        <th>Size</th>
+        <th>Progress</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody *ngIf="uploader.queue.length; else tableNoData">
+      <tr *ngFor="let item of uploader.queue">
+        <td>{{ item?.file?.name }}</td>
+        <td nowrap>{{ item?.file?.size/1024/1024 | number:'.2' }} MB</td>
+        <td>
+          <div class="progress" style="margin-bottom: 0;">
+            <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': item.progress + '%' }"></div>
+            <mat-progress-bar
+              class=""
+              color="primary"
+              mode="determinate"
+              [value]="item.progress">
+            </mat-progress-bar>
+          </div>
+        </td>
+        <td class="">
+          <mat-icon *ngIf="item.isSuccess">check</mat-icon>
+          <mat-icon *ngIf="item.isCancel">cancel</mat-icon>
+          <mat-icon *ngIf="item.isError">error</mat-icon>
+        </td>
+        <td nowrap>
+          <button
+            mat-raised-button
+            class="mat-warn"
+            (click)="item.remove()">Remove</button>
+        </td>
+      </tr>
+      </tbody>
+      <ng-template #tableNoData>
+        <p [ngStyle]="{padding: '0 1.2rem'}">ID for each legal representative<br>Signature List<br>Document evidencing authority of person signing IMA or giving investment instruction </p>
+      </ng-template>
+    </table>
+    <div>
+      <p>Queue progress:</p>
+      <div class="progress mb-1" >
+        <mat-progress-bar
+          class=""
+          color="primary"
+          mode="determinate"
+          [value]="uploader.progress">
+        </mat-progress-bar>
+      </div>
+
+      <button
+        mat-raised-button
+        class="mat-primary"
+        (click)="uploader.uploadAll()"
+        [disabled]="!uploader.getNotUploadedItems().length">Upload all</button>
+    </div>
+  </mat-expansion-panel>
+</mat-accordion>

@@ -1,0 +1,169 @@
+<mat-accordion>
+  <mat-expansion-panel hideToggle="true" [expanded]="false">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Customer Identification
+      </mat-panel-title>
+      <mat-panel-description>
+      </mat-panel-description>
+      <mat-icon>account_circle</mat-icon>
+    </mat-expansion-panel-header>
+    <!-- TODO: Fix linear TRUE -->
+    <mat-horizontal-stepper [linear]="true" #stepper>
+    <mat-step [stepControl]="step.form" *ngFor="let step of parsedJson2.sections">
+      <ng-template matStepLabel>{{step.section_name}}</ng-template>
+      <span *ngIf="step.section_type == 'normal'">
+      <form [formGroup]="step.form">
+        <div class="form-container">
+          <span *ngFor="let question of step.question_list">
+            <label *ngIf="question.qtype == 'single-choice' || question.qtype == 'multi-choice'">{{question.qtext}}</label>
+            <mat-form-field *ngIf="question.qtype == 'input-text'">
+              <input [(ngModel)]="question.answer" matInput placeholder="{{question.qtext}}" [formControlName]="question.key">
+            </mat-form-field>
+              <mat-form-field *ngIf="question.qtype == 'input-email'">
+              <input [(ngModel)]="question.answer" matInput placeholder="{{question.qtext}}" [formControlName]="question.key">
+            </mat-form-field>
+            <mat-form-field *ngIf="question.qtype == 'input-text-sec'">
+              <input #regID (blur)="fetchAuthority(regID.value)" [(ngModel)]="question.answer" matInput placeholder="{{question.qtext}}" [formControlName]="question.key">
+                <button (click)="openAuthority();" mat-button *ngIf="authorityLink !== null" matSuffix mat-icon-button aria-label="View More">
+                  <mat-icon>launch</mat-icon>
+                </button>
+            </mat-form-field>
+            <mat-radio-group [(ngModel)]="question.answer"  [formControlName]="question.key" *ngIf="question.qtype == 'single-choice'">
+              <mat-radio-button style="width: 100%;"
+                                *ngFor="let choice of question.qchoices" [color]="'primary'" [value]="choice.value">
+                {{choice.text}}
+              </mat-radio-button>
+            </mat-radio-group>
+            <span *ngIf="question.qtype == 'multi-choice'">
+               <div *ngFor="let choice of question.qchoices">
+                 <mat-checkbox [value]="choice.value" [color]="'primary'"
+                               [formControlName]="choice.key">{{choice.text}}</mat-checkbox></div>
+          </span>
+          </span>
+        </div>
+      </form>
+      <button  mat-button matStepperNext>Next</button>
+      </span>
+      <span *ngIf="step.section_name == 'Done'">
+        <button mat-button class="danger mat-raised-button" [color]="'primary'" (click)="saveCustomer()">Submit</button>
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button (click)="stepper.reset()">Reset</button>
+        </div>
+      </span>
+    </mat-step>
+    </mat-horizontal-stepper>
+  </mat-expansion-panel>
+  <mat-expansion-panel  hideToggle="true">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Corporate Structure
+      </mat-panel-title>
+      <mat-icon>business</mat-icon>
+    </mat-expansion-panel-header>
+    <mat-horizontal-stepper #stepper>
+      <mat-step [stepControl]="step.form" *ngFor="let step of parsedCorporateJson.sections">
+        <ng-template matStepLabel>{{step.section_name}}</ng-template>
+        <span *ngIf="step.section_name !== 'Done'">
+      <form [formGroup]="step.form">
+        <div class="form-container">
+          <span *ngFor="let question of step.question_list">
+            <span *ngIf="question.qtype == 'input-array'" [formArrayName]="step.formArray">
+            <div *ngFor="let row of getSections(step.form, step.formArray); let i = index" [formGroupName]="i">
+             <mat-form-field *ngIf="question.qtype == 'input-array'">
+              <input matInput placeholder="{{question.qtext0}}" [formControlName]="'id'">
+            </mat-form-field>
+            <mat-form-field *ngIf="question.qtype == 'input-array'">
+              <input matInput placeholder="{{question.qtext}}" [formControlName]="'name'">
+            </mat-form-field>
+            <mat-form-field *ngIf="question.qtype == 'input-array' && step.section_name == 'Shareholders'">
+              <input matInput placeholder="{{question.qtext2}}" [formControlName]="'percentage'">
+            </mat-form-field>
+                  <mat-icon  class="removeIcon" (click)="removeSection(step.form,i, 'shareholders')" >remove_circle</mat-icon>
+                  <mat-icon *ngIf="i !== 0 && step.section_name == 'Board Members'" class="removeIcon" (click)="removeSection(step.form,i, 'boardmembers')" >remove_circle</mat-icon>
+                  <button mat-button (click)="saveAssociation(row, 'SHAREHOLDER')">Save</button>
+            </div>
+
+          </span>
+          </span>
+        </div>
+      </form>
+      <button mat-button matStepperNext>Next</button>
+      <button *ngIf="step.section_name == 'Shareholders'" (click)="addSection(step.form, 'shareholders')" mat-button>Add</button>
+      <button *ngIf="step.section_name == 'Board Members'" (click)="addSection(step.form, 'boardmembers')" mat-button>Add</button>
+      </span>
+        <span *ngIf="step.section_name == 'Done'">
+        <button mat-button class="danger mat-raised-button" [color]="'primary'" (click)="saveNotif()">Submit</button>
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button (click)="stepper.reset()">Reset</button>
+        </div>
+      </span>
+      </mat-step>
+
+    </mat-horizontal-stepper>
+  </mat-expansion-panel>
+  <mat-expansion-panel hideToggle="true">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Financial Information
+      </mat-panel-title>
+      <mat-icon>account_balance</mat-icon>
+    </mat-expansion-panel-header>
+    <mat-horizontal-stepper #stepper>
+      <mat-step [stepControl]="financialFirstFormGroup">
+        <form>
+          <ng-template matStepLabel>Economic Sector</ng-template>
+          <div class="form-container">
+            <mat-radio-group name="ecoSectorRadio" [(ngModel)]="economicSectorInfo.sector">
+              <mat-radio-button [color]="'primary'" *ngFor="let sector of economicSectors" value={{sector.value}}>{{sector.text}}</mat-radio-button>
+            </mat-radio-group>
+          </div>
+          <div>
+            <button mat-button matStepperNext>Next</button>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step [stepControl]="financialSecondFormGroup">
+        <form>
+          <ng-template matStepLabel>Assets Under Management </ng-template>
+          <div *ngFor="let finItem of financialAssets">
+            <div fxLayout="row" fxLayoutWrap="wrap">
+              <div fxFlex="100" fxFlex.gt-sm="33" fxFlex.sm="100" style="padding-top: 1.5%">
+                <mat-checkbox (change)="finItem.restValues()" name="{{finItem.revenueType}}1" [(ngModel)]="finItem.selected" [color]="'primary'">{{finItem.revenueType}}</mat-checkbox>
+              </div>
+              <div *ngIf="finItem.selected" fxFlex="100" fxFlex.gt-sm="20" fxFlex.sm="100" style="margin-right: 3%">
+                <mat-form-field>
+                  <input name="{{finItem.revenueType}}2" matInput [(ngModel)]="finItem.amount" placeholder="Value" type="number">
+                </mat-form-field>
+              </div>
+              <div *ngIf="finItem.selected" fxFlex="100" fxFlex.gt-sm="20" fxFlex.sm="100">
+                <mat-form-field>
+                  <mat-select name="{{finItem.revenueType}}3" [(ngModel)]="finItem.currency" placeholder="Currency">
+                    <mat-option value="EUR">EUR</mat-option>
+                    <mat-option value="USD">USD</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <div>
+            <button mat-button matStepperNext>Next</button>
+          </div>
+        </form>
+      </mat-step>
+
+      <mat-step>
+        <ng-template matStepLabel>Done</ng-template>
+        <button mat-button class="danger mat-raised-button" [color]="'primary'" (click)="saveFinancialInformation();">Save</button>
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button (click)="stepper.reset()">Reset</button>
+        </div>
+      </mat-step>
+    </mat-horizontal-stepper>
+  </mat-expansion-panel>
+
+  <button style="float:right; margin-top: 20px;" mat-button class="danger mat-raised-button" [color]="'primary'" (click)="submitRequest()">Submit Application</button>
+</mat-accordion>

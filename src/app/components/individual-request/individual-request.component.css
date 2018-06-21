@@ -1,0 +1,36 @@
+.form-container, .suitability-container {
+  display: flex;
+  flex-direction: column;
+}
+mat-form-field{
+  width: 100%;
+}
+.form-container > * {
+  width: 35%;
+}
+
+.suitability-container > * {
+  width: 90%;
+}
+.question-text{
+  width: 50%;
+  float: left;
+}
+.question-answer{
+  width: 50%;
+  float: left;
+  text-align: center;
+}
+table{
+  margin-bottom: 110px;
+  border-spacing:0
+
+}
+.suitability-td:nth-child(2), .suitability-td:nth-child(3){
+  text-align: center;
+}
+td:nth-child(2), th:nth-child(2) {
+  border-right: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
