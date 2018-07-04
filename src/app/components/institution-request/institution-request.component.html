@@ -1,2 +1,26 @@
-Inst
+<button (click)="addShareHolder()">Add Shareholder</button>
+<button (click)="addBoardMember()">Add Board Member</button>
+<form [formGroup]="corporateStructureForm">
+  <table>
+    <ng-container formArrayName="shareholders">
+      <tr *ngFor="let ctrl of corporateStructureForm.get('shareholders')['controls']; let i = index" [formGroupName]="i">
+        <td><input type="text" class="form-control" formControlName="id"></td>
+        <td><input type="text" class="form-control" formControlName="name"></td>
+        <td><input type="text" class="form-control" formControlName="percentage"></td>
+      </tr>
+    </ng-container>
+  </table>
 
+  <table>
+    <ng-container formArrayName="boardmembers">
+      <tr *ngFor="let ctrl of corporateStructureForm.get('boardmembers')['controls']; let i = index" [formGroupName]="i">
+        <td><input type="text" class="form-control" formControlName="id"></td>
+        <td><input type="text" class="form-control" formControlName="name"></td>
+        <td><input type="file" (change)="onFileChange($event, ctrl)"></td>
+      </tr>
+    </ng-container>
+  </table>
+</form>
+<!-- TODO: -->
+<!-- Ako ti je sporo kad dodas neki file, i pises u polja, iskomentiraj ovo ispod -->
+<pre>{{corporateStructureForm.value | json}}</pre>
