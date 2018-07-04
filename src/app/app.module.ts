@@ -14,12 +14,14 @@ import {RegulatedRequestComponent} from "./components/regulated-request/regulate
 import {RouterModule} from "@angular/router";
 import {rootRouterConfig} from "./app.routing";
 import {IndividualRequestComponent} from "./components/individual-request/individual-request.component";
+import {InstitutionRequestComponent} from "./components/institution-request/institution-request.component";
 
 @NgModule({
   declarations: [
     AppComponent,
     RegulatedRequestComponent,
-    IndividualRequestComponent
+    IndividualRequestComponent,
+    InstitutionRequestComponent
   ],
   imports: [
     BrowserModule,
