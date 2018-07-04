@@ -3,20 +3,34 @@
 <form [formGroup]="corporateStructureForm">
   <table>
     <ng-container formArrayName="shareholders">
-      <tr *ngFor="let ctrl of corporateStructureForm.get('shareholders')['controls']; let i = index" [formGroupName]="i">
-        <td><input type="text" class="form-control" formControlName="id"></td>
-        <td><input type="text" class="form-control" formControlName="name"></td>
-        <td><input type="text" class="form-control" formControlName="percentage"></td>
+      <tr *ngFor="let ctrl of corporateStructureForm.get('shareholders')['controls']; let i = index"
+          [formGroupName]="i">
+        <td>
+          <input matInput placeholder="id" formControlName="id">
+        </td>
+        <td>
+          <input matInput placeholder="name" formControlName="name">
+        </td>
+        <td>
+          <input matInput placeholder="percentage" formControlName="percentage">
+        </td>
       </tr>
     </ng-container>
   </table>
 
   <table>
     <ng-container formArrayName="boardmembers">
-      <tr *ngFor="let ctrl of corporateStructureForm.get('boardmembers')['controls']; let i = index" [formGroupName]="i">
-        <td><input type="text" class="form-control" formControlName="id"></td>
-        <td><input type="text" class="form-control" formControlName="name"></td>
-        <td><input type="file" (change)="onFileChange($event, ctrl)"></td>
+      <tr *ngFor="let ctrl of corporateStructureForm.get('boardmembers')['controls']; let i = index"
+          [formGroupName]="i">
+        <td>
+          <input matInput placeholder="id" formControlName="id">
+        </td>
+        <td>
+          <input matInput placeholder="name" formControlName="name">
+        </td>
+        <td>
+          <input type="file" (change)="onFileChange($event, ctrl)">
+        </td>
       </tr>
     </ng-container>
   </table>

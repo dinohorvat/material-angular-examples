@@ -32,8 +32,8 @@ export class InstitutionRequestComponent implements OnInit {
 
   addBoardMember(id?, name?){
     const control = new FormGroup({
-      id: new FormControl(id, Validators.required),
-      name: new FormControl(name, Validators.required),
+      id: new FormControl(id ? id :"", Validators.required),
+      name: new FormControl(name ? name : "", Validators.required),
       file: new FormControl(null, Validators.required)
 
     });
